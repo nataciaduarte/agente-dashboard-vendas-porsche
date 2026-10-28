@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Painel de vendas montado a partir de uma planilha tratada por um agente de IA. Dados fictícios de curso.">
+  <title>Painel de Vendas Porsche · dados tratados por agente de IA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Michroma&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="trend.css">
+  <style>
+    .quality{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:18px}
+    .quality div{font-size:11px;color:#666;line-height:1.4}
+    .quality b{display:block;font-size:26px;color:var(--ink);letter-spacing:-1px;margin-bottom:4px}
+    .quality .ok b{color:#15803d}
+    .quality-note{grid-column:1/-1;font-size:12px;color:#555;border-top:1px solid #eee;padding-top:12px;margin:0}
+    @media(max-width:950px){.quality{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <span class="brand">VENDAS <span>PAINEL DE ESTUDO</span></span>
+    <div class="period"><span class="dot"></span><span id="periodLabel">Todos os períodos</span></div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Projeto de portfólio · dados fictícios do curso DIO</p>
+        <h1>Vendas Porsche, depois do tratamento.</h1>
+        <p class="lede">A planilha original passou por um agente de tratamento de dados antes de chegar aqui. O painel mostra só as vendas com data válida e não canceladas.</p>
+      </div>
+      <button id="reset" class="ghost">Limpar filtros</button>
+    </section>
+
+    <section class="quality" aria-label="Qualidade dos dados">
+      <div><b id="qReceived">—</b>registros na planilha original</div>
+      <div><b id="qImpossible">—</b>com data impossível (ex.: 30 de fevereiro)</div>
+      <div><b id="qFuture">—</b>com data futura, posterior a <span id="qRef">—</span></div>
+      <div><b id="qCancelled">—</b>canceladas, fora dos indicadores</div>
+      <div class="ok"><b id="qUsed">—</b>vendas consideradas no painel</div>
+      <p class="quality-note">Regras de tratamento em <code>agente/schema.md</code>. Relatório completo na aba Relatorio_Qualidade da planilha tratada.</p>
+    </section>
+
+    <section class="filter-panel" aria-label="Filtros do painel">
+      <label>Modelo<select id="modelFilter"><option value="">Todos os modelos</option></select></label>
+      <label>Ano do modelo<select id="yearFilter"><option value="">Todos os anos</option></select></label>
+      <label>Cidade<select id="cityFilter"><option value="">Todas as cidades</option></select></label>
+      <label>Forma de pagamento<select id="paymentFilter"><option value="">Todas as formas</option></select></label>
+      <label>De<input type="date" id="dateFrom"></label>
+      <label>Até<input type="date" id="dateTo"></label>
+    </section>
+
+    <section class="kpis" aria-label="Indicadores principais">
+      <article><span>Vendas</span><strong id="salesKpi">—</strong><small id="salesNote">vendas no recorte</small></article>
+      <article><span>Receita</span><strong id="revenueKpi">—</strong><small>soma das vendas não canceladas</small></article>
+      <article><span>Ticket médio</span><strong id="ticketKpi">—</strong><small>receita dividida pelo número de vendas</small></article>
+      <article class="accent-card"><span>Modelo líder</span><strong id="leaderKpi">—</strong><small id="leaderNote">—</small></article>
+    </section>
+
+    <section class="grid">
+      <article class="panel trend-panel">
+        <div class="panel-head">
+          <div><p class="eyebrow">Evolução</p><h2>Vendas ao longo do tempo</h2></div>
+          <div class="trend-switch" role="group" aria-label="Métrica do gráfico">
+            <button class="active" data-trend="sales">Vendas</button>
+            <button data-trend="revenue">Receita</button>
+          </div>
+        </div>
+        <div class="trend-summary"><strong id="trendDelta">—</strong><span id="trendSummary"></span></div>
+        <div id="trendChart" class="trend-chart" aria-label="Gráfico de evolução mensal"></div>
+      </article>
+      <article class="panel panel-wide">
+        <div class="panel-head"><div><p class="eyebrow">Demanda</p><h2>Modelos por cidade</h2></div><span>Top 6 cidades</span></div>
+        <div id="cityModelChart" class="stack-list"></div>
+      </article>
+      <article class="panel">
+        <div class="panel-head"><div><p class="eyebrow">Preferência</p><h2>Ano mais vendido</h2></div></div>
+        <div id="yearHero" class="year-hero"></div>
+        <div id="yearBars" class="mini-bars"></div>
+      </article>
+      <article class="panel">
+        <div class="panel-head"><div><p class="eyebrow">Conversão</p><h2>Pagamento</h2></div></div>
+        <div id="paymentChart" class="donut-wrap"></div>
+      </article>
+      <article class="panel panel-wide insight-panel">
+        <div class="panel-head"><div><p class="eyebrow">Distribuição geográfica</p><h2>Vendas por estado</h2></div><span id="insightCount"></span></div>
+        <div id="insights" class="insights"></div>
+      </article>
+    </section>
+  </main>
+
+  <footer><span>Fonte: dados/Porsche_data_base_sanitized.xlsx, gerada pelo agente em agente/porsche_sanitizer_agent.py</span><span>Dados fictícios fornecidos pelo curso DIO.</span></footer>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

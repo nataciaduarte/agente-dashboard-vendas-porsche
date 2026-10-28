@@ -1,0 +1,17 @@
+.trend-panel{grid-column:1/-1;min-height:420px}
+.trend-switch{display:flex;background:#efeeeb;border-radius:999px;padding:3px}
+.trend-switch button{border:0;background:transparent;border-radius:999px;padding:8px 14px;font:600 11px 'DM Sans';cursor:pointer;color:#777}
+.trend-switch button.active{background:var(--ink);color:#fff}
+.trend-summary{display:flex;align-items:baseline;gap:10px;margin:-8px 0 12px}
+.trend-summary strong{font-size:28px;letter-spacing:-1px}
+.trend-summary span{font-size:11px;color:#888}
+.trend-chart{height:250px;position:relative}
+.trend-chart svg{width:100%;height:100%;overflow:visible}
+.trend-grid{stroke:#e6e4df;stroke-width:1}
+.trend-area{fill:url(#trendFill)}
+.trend-line{fill:none;stroke:var(--red);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.trend-point{fill:#fff;stroke:var(--red);stroke-width:2}
+.trend-label{font:10px 'DM Sans';fill:#777}
+.trend-value{font:600 10px 'DM Sans';fill:#222}
+.trend-empty{height:100%;display:grid;place-items:center;color:#888;font-size:13px}
+@media(max-width:620px){.trend-panel{min-height:390px}.trend-panel .panel-head{gap:12px}.trend-switch button{padding:7px 10px}.trend-summary{display:block}.trend-summary span{display:block;margin-top:5px}.trend-chart{height:220px}}
